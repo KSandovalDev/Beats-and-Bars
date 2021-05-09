@@ -1,0 +1,118 @@
+<!doctype html>
+<html>
+<head>
+    <title>Beats & Bars</title>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/profile.css">
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="stylesheet" href="/assets/css/default.css">
+    <link rel="stylesheet" href="/assets/css/theme-orange.css">
+
+    <script src="/socket.io/socket.io.js"></script>
+    <!-- <script defer type="text/javascript" src="assets/js/messages.js"></script> -->
+</head>
+<body>
+    <div class="clearfix booking-form neon-lit-background">
+        <div class="booking-form__heading no-print">
+             <div>
+                <div class="neon-border neon-border--flush neon-border--blue neon-border--topgap-xxs neon-border--bottomgap-xxs">
+                    <h1 class="h1 type-decorative text-glow pink">BEATS     <span class="h1 annoying type-decorative text-glow pink">   &   </span>   BARS</h1>
+
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="navBtns">
+        <a href="/home" class=" navLink btn btn-default btn-sm glow">Profile</a>
+        <a href="/swiping" class=" navLink btn btn-default btn-sm glow">Swipe</a>
+        <a href="/matches" class=" navLink btn btn-default btn-sm glow">Matches</a>
+        <a href="/logout" class=" navLink btn btn-default btn-sm glow">Logout</a>
+    </div>
+
+
+    <div class="messageContainer">
+        <div class="messageArea">
+            <ul id="messages"></ul>
+        </div>
+        <div class="messageForm">
+            <form id="form" action="">
+                <input id="input" autocomplete="off" /><button type="submit" id="msgBtn" class=" navLink btn btn-default btn-sm glow">Send</button>
+            </form>
+        </div>
+    </div>
+    
+    <!-- <% for(let i =0;i<user.length;i++){ %>
+    <h3><%= user[i].name %></h3>
+    <% } %>  -->
+
+    <script>
+        var socket = io();
+        var messages = document.getElementById('messages');
+        var input = document.getElementById('input');
+        var form = document.getElementById('form')
+
+        console.log(form)
+        form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        if (input.value) {
+            socket.emit('chat message', {message:input.value,fromName:'<%= user.username %>',fromEmail:"<%=user.local.email%>",toEmail: '<%= username %>'});
+            input.value = '';
+        }
+        });
+        // io.on("connection",socket =>{
+        socket.on('chat message', function (msg) {
+            console.log("message recieved", msg)
+            if(msg.toEmail === "<%=user.local.email%>" || msg.fromEmail === "<%=user.local.email%>"){
+                var from = document.createElement('span');
+                var item = document.createElement('li');
+                if(msg.fromEmail === "<%=user.local.email%>"){
+                    item.classList.add('floatRight')
+                    from.classList.add('floatRight')
+                }
+                item.textContent = msg.message;
+                from.textContent = msg.fromName;
+                messages.appendChild(from);
+                messages.appendChild(item);
+                console.log(msg.fromEmail)
+                window.scrollTo(0, document.body.scrollHeight); 
+            }
+        });
+    </script>
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+crossorigin="anonymous"></script>
+<script
+src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+crossorigin="anonymous"></script>
+<script
+src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+crossorigin="anonymous"></script>
+
+
+<script>
+    var cont = $(".neon-lit-background");
+var neon = $(".neon-border");
+setInterval(function() {
+var i = Math.floor((Math.random() * 10) + 1) * 200;
+setTimeout(function() {
+setTimeout(function() {
+    $(cont).addClass("neon-lit-background--poweroff");
+    $(neon).addClass("neon-border--poweroff");
+  }, i),
+  $(cont).removeClass("neon-lit-background--poweroff");
+$(neon).removeClass("neon-border--poweroff");
+}, 1000);
+}, 2000);
+</script>
+
+</body>
+</html>
